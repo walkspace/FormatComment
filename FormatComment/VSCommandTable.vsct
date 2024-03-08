@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<Extern href="stdidcmd.h"/>
+<Extern href="vsshlids.h"/>
+<Include href="KnownImageIds.vsct"/>
+<Include href="VSGlobals.vsct"/>
+
+<Commands package="FormatComment">
+  <Groups>
+    <Group guid="FormatComment" id="FormatCommentGroup" priority="0x0600">
+      <Parent guid="VSMainMenu" id="Tools"/>
+    </Group>
+    <Group guid="FormatComment" id="FormatCommentGroup" priority="0x0001">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
+    </Group>
+    <Group guid="FormatComment" id="FormatCommentMenuGroup" priority="0x0600">
+      <Parent guid="FormatComment" id="FormatCommentMenu"/>
+    </Group>
+  </Groups>
+
+  <!--This section defines the elements the user can interact with, like a menu command or a button
+      or combo box in a toolbar. -->
+  <Menus>
+    <Menu guid="FormatComment" id="FormatCommentMenu" priority="0x0100" type="Menu">
+      <Parent guid="FormatComment" id="FormatCommentGroup" />
+      <Strings>
+        <ButtonText>Format Comment</ButtonText>
+        <CommandName>Format Comment</CommandName>
+      </Strings>
+    </Menu>
+  </Menus>
+  <Buttons>
+    <Button guid="FormatComment" id="FormatCommentLineTabRightCommand" priority="0x0100" type="Button">
+      <Parent guid="FormatComment" id="FormatCommentMenuGroup" />
+        <Icon guid="ImageCatalogGuid" id="TableFillRight" />
+      <CommandFlag>IconIsMoniker</CommandFlag>
+      <Strings>
+        <ButtonText>Tab Right</ButtonText>
+        <LocCanonicalName>.Tools.FormatComment</LocCanonicalName>
+      </Strings>
+    </Button>
+    <Button guid="FormatComment" id="FormatCommentLineTabLeftCommand" priority="0x0100" type="Button">
+      <Parent guid="FormatComment" id="FormatCommentMenuGroup" />
+        <Icon guid="ImageCatalogGuid" id="TableFillLeft" />
+      <CommandFlag>IconIsMoniker</CommandFlag>
+      <Strings>
+        <ButtonText>Tab Left</ButtonText>
+        <LocCanonicalName>.Tools.FormatComment</LocCanonicalName>
+      </Strings>
+    </Button>
+    <Button guid="FormatComment" id="FormatCommentFuncToCCommand" priority="0x0100" type="Button">
+      <Parent guid="FormatComment" id="FormatCommentMenuGroup" />
+        <Icon guid="ImageCatalogGuid" id="ConvertPartition" />
+      <CommandFlag>IconIsMoniker</CommandFlag>
+      <Strings>
+        <ButtonText>Comment To C</ButtonText>
+        <LocCanonicalName>.Tools.FormatComment</LocCanonicalName>
+      </Strings>
+    </Button>
+  </Buttons>
+</Commands>
+
+<Symbols>
+  <GuidSymbol name="FormatComment" value="{0fe50042-a94c-4212-aee9-7da8a4436ab8}">
+    <IDSymbol name="FormatCommentGroup" value="0x0001" />
+    <IDSymbol name="FormatCommentMenuGroup" value="0x0002" />
+    <IDSymbol name="FormatCommentMenu" value="0x0100" />
+    <IDSymbol name="FormatCommentLineTabRightCommand" value="0x0101" />
+    <IDSymbol name="FormatCommentLineTabLeftCommand" value="0x0102" />
+    <IDSymbol name="FormatCommentFuncToCCommand" value="0x0103" />
+  </GuidSymbol>
+</Symbols>
+</CommandTable>
