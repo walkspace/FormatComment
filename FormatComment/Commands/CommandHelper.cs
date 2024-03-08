@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,9 +11,8 @@ namespace FormatComment
         public static string FormatCommentLineTab(string text, int tabspace, int tabCount)
         {
             char[] anyofEmpty = [' ', '\t', '\n', '\r'];
-            var curr = new string(text.Where(c => c != '\r').ToArray());    // 删除 '\r'
             var list = new List<(string, int, int)>();
-            foreach (string line in curr.Split('\n'))
+            foreach (string line in text.Split('\n'))
             {
                 int commentIndex = line.IndexOf("//");                      // 找到注释
                 if (commentIndex == -1)
@@ -74,6 +74,99 @@ namespace FormatComment
 
             return string.Join("\n", [.. result]);
         }
+
+        // 获取注释内容
+        public static List<TextPostion> GetCommentContent(TextPostion text)
+        {
+            char[] anyOfComment = [' ', '\t', '\r', '\n', '/', '*', '-', '='];
+            string[] equalOfComment =
+            [
+                "/// <summary>",
+                "/// </summary>",
+                "/// <returns></returns>"
+            ];
+
+            List<TextPostion> list = [];
+            foreach (TextPostion line in text.Trim().Split(["\n"]))
+            {
+                TextPostion pos = line.Trim();
+                if (pos.Length == 0)                                            // 空行
+                {
+                    list.Add(pos);
+                    continue;
+                }
+
+                if (line.All(c => anyOfComment.Contains(c)))                    // 比如全是 = 或 * 则删除
+                    continue;
+
+                if (equalOfComment.Contains(pos.Text))                          // 注释标识，比如 "/// <summary>" 则删除
+                    continue;
+
+                TextPostion rnt;
+                if (pos.Length >= 4 && pos.Text.Substring(0, 2) == "/*" && pos.Text.Substring(pos.Text.Length - 2) == "*/")
+                {
+                    rnt = pos.Substring(2, pos.Text.Length - 4).TrimEnd();      // 注释 "/**/"
+                }
+                else if (pos.Length >= 3 && pos.Text.Substring(0, 3) == "///")  // 注释 "///"
+                {
+                    rnt = pos.Substring(3).TrimEnd();
+                }
+                else if (pos.Length >= 2 && pos.Text.Substring(0, 2) == "//")   // 注释："//"
+                {
+                    rnt = pos.Substring(2).TrimEnd();
+                }
+                else
+                {
+                    rnt = pos;
+                }
+
+                list.Add(rnt[0] == ' ' ? rnt.Substring(1) : rnt);
+            }
+            return list;
+        }
+
+        // 转成 C 语言风格的注释
+        public static string FormatCommentToC(List<TextPostion> list, string prevSpace, int maxColumn, char commentChar)
+        {
+            List<string> result = [];
+            result.Add(GetCommentLineText("", 0, prevSpace, maxColumn, commentChar));
+            foreach (TextPostion line in list)
+            {
+                if (line.Text.Length == 0)
+                {
+                    result.Add(GetCommentLineText("", 0, prevSpace, maxColumn, ' '));
+                }
+                else
+                {
+                    result.Add(GetCommentLineText(line.Text, line.ColumnWidth, prevSpace, maxColumn, ' '));
+                }
+            }
+            result.Add(GetCommentLineText("", 0, prevSpace, maxColumn, commentChar));
+            return string.Join("\n", result);
+        }
+
+        // 获取最终注释的行
+        private static string GetCommentLineText(string content, int contentLength, string prevSpace, int maxColumn, char tag)
+        {
+            string fill = "";
+            int length = maxColumn - (prevSpace.Length + 6 + contentLength);
+            if (length > 0)
+            {
+                fill = new string(tag, length);
+            }
+            return prevSpace + "/*" + tag + content + fill + tag + "*/";
+        }
+    }
+
+    public class TextLine
+    {
+        public TextPostion TextPostion { get; set; }
+        public List<TextPostion> List { get; set; } = [];
+    }
+
+    public class TextContent
+    {
+        public List<TextLine> List { get; set; } = [];
     }
 }
 

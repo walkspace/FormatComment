@@ -1,5 +1,7 @@
 ﻿using FormatComment;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FormatCommentUnitTest
 {
@@ -70,6 +72,33 @@ namespace FormatCommentUnitTest
             text += "123         //comment";
             result = CommandHelper.FormatCommentLineTab(text, 4, -1);
             Assert.AreEqual(result, "123 //comment\n//AAA\n123 //comment");
+        }
+
+        [TestMethod]
+        public void TestFormatCommentToC()
+        {
+            string text = "";
+            text += "/// <summary>\n";
+            text += "/// \n";
+            text += " \t \n";
+            text += "/// </summary>\n";
+            text += "/*******/\n";
+            text += "/* AA*/ \n";
+            text += "///BB \n";
+            text += "//CC \n";
+
+            int maxColumn = 20;
+            var prevSpace = " ";
+            var list = CommandHelper.GetCommentContent(new TextPostion(text, 0));
+            string result = CommandHelper.FormatCommentToC(list, prevSpace, maxColumn, '-');
+            string newText = "";
+            newText += " /*---------------*/\n";
+            newText += " /*               */\n";
+            newText += " /* AA            */\n";
+            newText += " /* BB            */\n";
+            newText += " /* CC            */\n";
+            newText += " /*---------------*/";
+            Assert.AreEqual(newText, result);
         }
     }
 }

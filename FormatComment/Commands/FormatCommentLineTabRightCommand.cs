@@ -22,7 +22,7 @@ namespace FormatComment
             int end = selection.End.Position;
             string oldText = snapshot.GetText(start, end - start);
             string newText = CommandHelper.FormatCommentLineTab(oldText, tabspace, 1);
-            if(newText != "")
+            if (newText != "")
             {
                 docView.TextBuffer?.Replace(new Span(start, end - start), newText);                 // 替换原有字符
                 docView.TextView.Selection.Clear();

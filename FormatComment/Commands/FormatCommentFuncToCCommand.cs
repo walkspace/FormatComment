@@ -24,91 +24,67 @@ namespace FormatComment
             if (await Package.GetServiceAsync(typeof(DTE)) is not DTE dte)
                 return;
 
-            var cchar = General.Instance.CommentChar;
-            GetSelectionTextRange(snapshot, selection, out int beg, out int end, out string tabspace);
-            var lstContentLines = GetContentText(snapshot, beg, end, cchar);
-
-            // 计算最大列数、每行内容的列数
             var maxColumn = General.Instance.MaxColumn - 1;     // VS2022 文档编辑窗口下面显示的列数从 1 开始
-            var nowContentLines = new List<(string, int)>();
-            foreach ((string lineContent, int lineBeg, int lineEnd) in lstContentLines)
-            {
-                if (lineContent.Length == 0)
-                {
-                    nowContentLines.Add(("", 0));
-                    continue;
-                }
+            var commentChar = General.Instance.CommentChar;
+            GetSelectionTextRange(snapshot, selection, out int start, out int end, out string prevSpace);
 
-                vs.GetLineAndColumn(lineBeg, out int numBeg, out int idxBeg);
+            var sour = snapshot.GetText(start, end - start);
+            var list = CommandHelper.GetCommentContent(new TextPostion(sour, start));
+            foreach (TextPostion line in list)                  // 计算最大列数、每行内容的列数
+            {
+                if (line.Text.Length == 0)
+                    continue;
+
+                vs.GetLineAndColumn(line.Start, out int numBeg, out int idxBeg);
                 vs.SetSelection(numBeg, idxBeg, numBeg, idxBeg);
                 int? columnBeg = (dte.ActiveDocument.Selection as TextSelection)?.CurrentColumn;
 
-                vs.GetLineAndColumn(lineEnd, out int numEnd, out int idxEnd);
+                vs.GetLineAndColumn(line.End, out int numEnd, out int idxEnd);
                 vs.SetSelection(numEnd, idxEnd, numEnd, idxEnd);
                 int? columnEnd = (dte.ActiveDocument.Selection as TextSelection)?.CurrentColumn;
 
-                int contentLength = lineContent.Length;
+                int contentLength = line.ColumnWidth;
                 if (columnBeg != null && columnEnd != null)
                 {
-                    if (contentLength != columnEnd.Value - columnBeg.Value)
-                    {
-
-                    }
                     contentLength = Math.Max(contentLength, columnEnd.Value - columnBeg.Value);
-                    maxColumn = Math.Max(maxColumn, contentLength + tabspace.Length + 6);
-                }
-                nowContentLines.Add((lineContent, contentLength));
-            }
-
-            // 填充注释字符
-            var lines = new List<string>();
-            var temp = GetCommentLineText("", 0, tabspace, maxColumn, cchar);
-            lines.Add(temp);
-            if (nowContentLines.Count > 0)
-            {
-                foreach ((string str, int len) in nowContentLines)
-                {
-                    lines.Add(GetCommentLineText(str, len, tabspace, maxColumn, ' '));
+                    maxColumn = Math.Max(maxColumn, contentLength + prevSpace.Length + 6);
+                    line.ColumnWidth = contentLength;
                 }
             }
-            else
-            {
-                lines.Add(GetCommentLineText("", 0, tabspace, maxColumn, ' '));
-            }
-            lines.Add(temp);
-            var text = "\n" + string.Join("\n", lines) + "\n" + tabspace;
+            var result = CommandHelper.FormatCommentToC(list, prevSpace, maxColumn, commentChar);
+            var dest = "\n" + result + "\n" + prevSpace;
 
             // 替换原有字符
-            if (beg == end)
+            if (start == end)
             {
-                docView.TextBuffer?.Insert(beg, text);
+                docView.TextBuffer?.Insert(start, dest);
             }
             else
             {
-                docView.TextBuffer?.Replace(new Span(beg, end - beg), text);
+                docView.TextBuffer?.Replace(new Span(start, end - start), dest);
             }
 
             // 设置光标
             docView.TextView.Selection.Clear();
-            docView.TextView.Caret.MoveTo(new SnapshotPoint(snapshot, beg + text.Length));
+            docView.TextView.Caret.MoveTo(new SnapshotPoint(snapshot, start + dest.Length));
         }
 
         private static void GetSelectionTextRange(ITextSnapshot snapshot,
                                                   ITextSelection selection,
-                                                  out int beg,
+                                                  out int start,
                                                   out int end,
-                                                  out string tabspace)
+                                                  out string prevSpace)
         {
-            tabspace = "";
-            beg = selection.Start.Position;
+            prevSpace = "";
+            start = selection.Start.Position;
             end = selection.End.Position;
 
             // 判断 selection 前一个位置是否为回车符
-            if (beg > 0 && snapshot[beg - 1] == '\n')
+            if (start > 0 && snapshot[start - 1] == '\n')
             {
-                beg--;
+                start--;
             }
-            if (beg == snapshot.Length || end == snapshot.Length)
+            if (start == snapshot.Length || end == snapshot.Length)
                 return;
 
             // 从 selection 后一个位置开始，查找字符
@@ -133,8 +109,8 @@ namespace FormatComment
             afterEnterPos++;
 
             // 获取当行代码前面的空白字符串，以及需要被替换的文字区域
-            tabspace = snapshot.GetText(afterEnterPos, codePos - afterEnterPos);
-            beg = Math.Min(beg, afterEnterPos);
+            prevSpace = snapshot.GetText(afterEnterPos, codePos - afterEnterPos);
+            start = Math.Min(start, afterEnterPos);
             end = codePos;
         }
 
