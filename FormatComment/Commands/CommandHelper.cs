@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace FormatComment
@@ -78,49 +76,40 @@ namespace FormatComment
         // 获取注释内容
         public static List<TextPostion> GetCommentContent(TextPostion text)
         {
-            char[] anyOfComment = [' ', '\t', '\r', '\n', '/', '*', '-', '='];
+            char[] anyOfComment = ['/', '*', '-', '='];
             string[] equalOfComment =
             [
-                "/// <summary>",
-                "/// </summary>",
-                "/// <returns></returns>"
+                "<summary>",
+                "</summary>",
+                "<returns></returns>"
             ];
 
             List<TextPostion> list = [];
             foreach (TextPostion line in text.Trim().Split(["\n"]))
             {
                 TextPostion pos = line.Trim();
-                if (pos.Length == 0)                                            // 空行
-                {
-                    list.Add(pos);
-                    continue;
-                }
-
-                if (line.All(c => anyOfComment.Contains(c)))                    // 比如全是 = 或 * 则删除
-                    continue;
-
-                if (equalOfComment.Contains(pos.Text))                          // 注释标识，比如 "/// <summary>" 则删除
-                    continue;
-
-                TextPostion rnt;
+                TextPostion rnt = pos;
                 if (pos.Length >= 4 && pos.Text.Substring(0, 2) == "/*" && pos.Text.Substring(pos.Text.Length - 2) == "*/")
                 {
                     rnt = pos.Substring(2, pos.Text.Length - 4).TrimEnd();      // 注释 "/**/"
                 }
                 else if (pos.Length >= 3 && pos.Text.Substring(0, 3) == "///")  // 注释 "///"
                 {
-                    rnt = pos.Substring(3).TrimEnd();
+                    rnt = pos.Substring(3);
                 }
                 else if (pos.Length >= 2 && pos.Text.Substring(0, 2) == "//")   // 注释："//"
                 {
-                    rnt = pos.Substring(2).TrimEnd();
-                }
-                else
-                {
-                    rnt = pos;
+                    rnt = pos.Substring(2);
                 }
 
-                list.Add(rnt[0] == ' ' ? rnt.Substring(1) : rnt);
+                string dst = rnt.Text.Trim();
+                if (equalOfComment.Contains(dst))                               // 注释标识，比如 "<summary>" 则删除
+                    continue;
+
+                if (dst.Length > 0 && dst.All(c => anyOfComment.Contains(c)))   // 比如全是 = 或 * 则删除
+                    continue;
+
+                list.Add(rnt.Length >= 1 && rnt[0] == ' ' ? rnt.Substring(1) : rnt);
             }
             return list;
         }

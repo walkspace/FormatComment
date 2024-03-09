@@ -1,7 +1,5 @@
 ﻿using FormatComment;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace FormatCommentUnitTest
 {
@@ -79,7 +77,7 @@ namespace FormatCommentUnitTest
         {
             string text = "";
             text += "/// <summary>\n";
-            text += "/// \n";
+            text += "///\n";
             text += " \t \n";
             text += "/// </summary>\n";
             text += "/*******/\n";
@@ -93,6 +91,7 @@ namespace FormatCommentUnitTest
             string result = CommandHelper.FormatCommentToC(list, prevSpace, maxColumn, '-');
             string newText = "";
             newText += " /*---------------*/\n";
+            newText += " /*               */\n";
             newText += " /*               */\n";
             newText += " /* AA            */\n";
             newText += " /* BB            */\n";
