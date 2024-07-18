@@ -37,7 +37,7 @@
       <CommandFlag>IconIsMoniker</CommandFlag>
       <Strings>
         <ButtonText>Tab Right</ButtonText>
-        <LocCanonicalName>.Tools.FormatComment</LocCanonicalName>
+        <LocCanonicalName>.Tools.FormatCommentTabRight</LocCanonicalName>
       </Strings>
     </Button>
     <Button guid="FormatComment" id="FormatCommentLineTabLeftCommand" priority="0x0100" type="Button">
@@ -46,7 +46,7 @@
       <CommandFlag>IconIsMoniker</CommandFlag>
       <Strings>
         <ButtonText>Tab Left</ButtonText>
-        <LocCanonicalName>.Tools.FormatComment</LocCanonicalName>
+        <LocCanonicalName>.Tools.FormatCommentTabLeft</LocCanonicalName>
       </Strings>
     </Button>
     <Button guid="FormatComment" id="FormatCommentFuncToCCommand" priority="0x0100" type="Button">
@@ -55,7 +55,7 @@
       <CommandFlag>IconIsMoniker</CommandFlag>
       <Strings>
         <ButtonText>Comment To C</ButtonText>
-        <LocCanonicalName>.Tools.FormatComment</LocCanonicalName>
+        <LocCanonicalName>.Tools.FormatCommentCommentToC</LocCanonicalName>
       </Strings>
     </Button>
   </Buttons>

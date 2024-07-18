@@ -52,21 +52,22 @@ namespace FormatComment
                 }
             }
             var result = CommandHelper.FormatCommentToC(list, prevSpace, maxColumn, commentChar);
-            var dest = "\n" + result + "\n" + prevSpace;
+            var newText = "\n" + result + "\n" + prevSpace;
 
             // 替换原有字符
             if (start == end)
             {
-                docView.TextBuffer?.Insert(start, dest);
+                docView.TextBuffer?.Insert(start, newText);
             }
             else
             {
-                docView.TextBuffer?.Replace(new Span(start, end - start), dest);
+                docView.TextBuffer?.Replace(new Span(start, end - start), newText);
             }
 
             // 设置光标
+            snapshot = docView.TextView.TextSnapshot;
             docView.TextView.Selection.Clear();
-            docView.TextView.Caret.MoveTo(new SnapshotPoint(snapshot, start + dest.Length));
+            docView.TextView.Caret.MoveTo(new SnapshotPoint(snapshot, start + newText.Length));
         }
 
         private static void GetSelectionTextRange(ITextSnapshot snapshot,

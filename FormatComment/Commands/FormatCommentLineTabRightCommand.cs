@@ -25,7 +25,9 @@ namespace FormatComment
             if (newText != "")
             {
                 docView.TextBuffer?.Replace(new Span(start, end - start), newText);                 // 替换原有字符
-                docView.TextView.Selection.Clear();
+
+                snapshot = docView.TextView.TextSnapshot;
+                docView.TextView.Selection.Select(new SnapshotSpan(snapshot, start, newText.Length), false);
                 docView.TextView.Caret.MoveTo(new SnapshotPoint(snapshot, start + newText.Length)); // 设置光标
             }
         }
