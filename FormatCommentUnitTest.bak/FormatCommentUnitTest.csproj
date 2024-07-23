@@ -5,7 +5,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C9A0DB5B-10F7-421B-AC5F-8383CB848C61}</ProjectGuid>
+    <ProjectGuid>{35EAFDC5-E855-49C6-A1D0-14F6D15CA2DF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FormatCommentUnitTest</RootNamespace>
