@@ -2,7 +2,7 @@
 
   地址：[https://learn.microsoft.com/zh-cn/visualstudio/extensibility/vsix/get-started/get-tools?view=vs-2022]
 
-  ![文档](doc/visualstudio-extensibility-vsix-vs-2022.pdf)
+  文档：![本地文档](doc/visualstudio-extensibility-vsix-vs-2022.pdf)
 
 ## 开发指南 ##
 
