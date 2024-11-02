@@ -25,6 +25,9 @@
 
    Tools.FormatCommentTabLeft    : Ctrl + M, Ctrl + Shift + Tab
 
+# 下载
+
+地址：https://github.com/walkspace/FormatComment/wiki
 
 # Visual Studio 扩展开发
 
