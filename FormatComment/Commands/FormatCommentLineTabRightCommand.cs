@@ -24,11 +24,11 @@ namespace FormatComment
             string newText = CommandHelper.FormatCommentLineTab(oldText, tabspace, 1);
             if (newText != "")
             {
-                docView.TextBuffer?.Replace(new Span(start, end - start), newText);                 // 替换原有字符
+                docView.TextBuffer?.Replace(new Span(start, end - start), newText);                             // 替换原有字符
 
                 snapshot = docView.TextView.TextSnapshot;
-                docView.TextView.Selection.Select(new SnapshotSpan(snapshot, start, newText.Length), false);
-                docView.TextView.Caret.MoveTo(new SnapshotPoint(snapshot, start + newText.Length)); // 设置光标
+                docView.TextView.Selection.Select(new SnapshotSpan(snapshot, start, newText.Length), false);    // 重新选择
+                docView.TextView.Caret.MoveTo(new SnapshotPoint(snapshot, start + newText.Length));             // 设置光标
             }
         }
     }

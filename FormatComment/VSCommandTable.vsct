@@ -60,7 +60,7 @@
     </Button>
   </Buttons>
 </Commands>
-
+  
 <Symbols>
   <GuidSymbol name="FormatComment" value="{0fe50042-a94c-4212-aee9-7da8a4436ab8}">
     <IDSymbol name="FormatCommentGroup" value="0x0001" />
