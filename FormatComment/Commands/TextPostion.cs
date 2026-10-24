@@ -4,60 +4,55 @@ using System.Linq;
 
 namespace FormatComment
 {
-    public class TextPostion(string text, int position) : IEnumerable<char>
+    public class TextPostion(string text, int position)
     {
-        public string Text { get; } = text;                                         // 文本
-        public int Start { get; } = position;                                       // 开始位置
-        public int End { get; } = position + text.Length;                           // 结束位置
+        public string Text { get; } = text;                                         // 文本索引：[0..n]
+        public int Start { get; } = position;                                       // 开始位置，第 0   个索引
+        public int End { get; } = position + text.Length;                           // 结束位置，第 n+1 个索引
         public int ColumnWidth { get; set; } = text.Split('\n').Max(s => s.Length); // 文本列宽
         public int Length => Text.Length;
-
         public char this[int index] => Text[index];
 
         public TextPostion TrimStart(params char[] trimChars)
         {
             var text = Text.TrimStart(trimChars);
-            if (text.Length == 0)
-                return new TextPostion("", End);
-            else
-                return Substring(Length - text.Length, text.Length);
+            return new(text, End - text.Length);
         }
+
         public TextPostion TrimEnd(params char[] trimChars)
         {
             var text = Text.TrimEnd(trimChars);
-            if (text.Length == 0)
-                return new TextPostion("", Start);
-            else
-                return Substring(0, text.Length);
+            return new(text, Start);
         }
+
         public TextPostion Trim(params char[] trimChars)
         {
             var text = Text.Trim(trimChars);
-            if (text.Length == 0)
-                return new TextPostion("", Start);
-            else
-                return Substring(Text.IndexOf(text), text.Length);
+            return new(text, Start + Text.IndexOf(text));
         }
+
         public TextPostion Substring(int startIndex)
         {
-            return new TextPostion(Text.Substring(startIndex), Start + startIndex);
+            return new(Text.Substring(startIndex), Start + startIndex);
         }
+
         public TextPostion Substring(int startIndex, int length)
         {
-            return new TextPostion(Text.Substring(startIndex, length), Start + startIndex);
+            return new(Text.Substring(startIndex, length), Start + startIndex);
         }
+
         public List<TextPostion> Split(string[] separator, StringSplitOptions options = StringSplitOptions.None)
         {
             List<TextPostion> list = [];
 
             var arr = Text.Split(separator, StringSplitOptions.None);
-            int pos = 0;
+            var pos = 0;
             for (int i = 0; i < arr.Length; i++)
             {
-                string line = arr[i];
-                if (options != StringSplitOptions.RemoveEmptyEntries || line.Trim().Length > 0)
+                var line = arr[i];
+                if (options == StringSplitOptions.None || line.Trim().Length > 0)
                 {
-                    list.Add(new TextPostion(line, pos + Start));
+                    list.Add(new TextPostion(line, Start + pos));
                 }
                 if (i < arr.Length - 1)
                 {
@@ -66,16 +61,6 @@ namespace FormatComment
                 }
             }
             return list;
-        }
-
-        public IEnumerator<char> GetEnumerator()
-        {
-            return ((IEnumerable<char>)Text).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)Text).GetEnumerator();
         }
     }
 }
