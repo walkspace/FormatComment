@@ -18,7 +18,6 @@
       <Parent guid="FormatComment" id="FormatCommentMenu"/>
     </Group>
   </Groups>
-
   <!--This section defines the elements the user can interact with, like a menu command or a button
       or combo box in a toolbar. -->
   <Menus>
@@ -61,6 +60,30 @@
   </Buttons>
 </Commands>
 
+<KeyBindings>
+  <KeyBinding guid="FormatComment"
+              id="FormatCommentLineTabRightCommand"
+              editor="guidVSStd97"
+              mod1="Control"
+              key1="M"
+              mod2="Control" 
+              key2="Tab" />
+  <KeyBinding guid="FormatComment"
+            id="FormatCommentLineTabLeftCommand"
+            editor="guidVSStd97"
+            mod1="Control"
+            key1="M"
+            mod2="Control" 
+            key2="VK_OEM_3" />
+  <KeyBinding guid="FormatComment"
+            id="FormatCommentFuncToCCommand"
+            editor="guidVSStd97"
+            mod1="Control"
+            key1="M"
+            mod2="Control" 
+            key2="Z" />
+</KeyBindings>
+  
 <Symbols>
   <GuidSymbol name="FormatComment" value="{0fe50042-a94c-4212-aee9-7da8a4436ab8}">
     <IDSymbol name="FormatCommentGroup" value="0x0001" />

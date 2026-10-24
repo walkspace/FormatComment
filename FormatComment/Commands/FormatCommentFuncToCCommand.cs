@@ -24,13 +24,13 @@ namespace FormatComment
             if (await Package.GetServiceAsync(typeof(DTE)) is not DTE dte)
                 return;
 
-            var maxColumn = General.Instance.MaxColumn - 1;     // VS2022 文档编辑窗口下面显示的列数从 1 开始
+            var maxColumn = General.Instance.MaxColumn - 1; // VS2022 文档编辑窗口下面显示的列数从 1 开始
             var commentChar = General.Instance.CommentChar;
             GetSelectionTextRange(snapshot, selection, out int start, out int end, out string prevSpace);
 
             var sour = snapshot.GetText(start, end - start);
             var list = CommandHelper.GetCommentContent(new TextPostion(sour, start));
-            foreach (TextPostion line in list)                  // 计算最大列数、每行内容的列数
+            foreach (TextPostion line in list)              // 计算最大列数、每行内容的列数
             {
                 if (line.Text.Length == 0)
                     continue;
