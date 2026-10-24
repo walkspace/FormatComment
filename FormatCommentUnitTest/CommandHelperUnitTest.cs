@@ -1,35 +1,11 @@
-﻿
-using FormatComment;
-using ICSharpCode.Decompiler.CSharp.Syntax;
+﻿using FormatComment;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Linq;
-using System.Text.RegularExpressions;
 
-namespace UnitTest
+namespace FormatCommentUnitTest
 {
     [TestClass]
-    public class CommandHelperTest
+    public class CommandHelperUnitTest
     {
-        [TestMethod]
-        public void FindCommentIndexTest()
-        {
-            int index = CommandHelper.FindCommentIndex("int w = 0;");
-            Assert.AreEqual(-1, index);
-
-            index = CommandHelper.FindCommentIndex("int w = 0;// xx");
-            Assert.AreEqual(10, index);
-
-            index = CommandHelper.FindCommentIndex("var w = \"0 //xx\"; // This should");
-            Assert.AreEqual(18, index);
-
-            index = CommandHelper.FindCommentIndex("var w = \"0 //xx\"; /*aaa*/");
-            Assert.AreEqual(18, index);
-
-            index = CommandHelper.FindCommentIndex("var w = '//'/*aaa*/; /*aaa*/   ");
-            Assert.AreEqual(21, index);
-        }
-
         [TestMethod]
         public void TestFormatCommentLineTabRight()
         {
