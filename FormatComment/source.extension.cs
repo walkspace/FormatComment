@@ -12,7 +12,7 @@ namespace FormatComment
         public const string Name = "FormatComment";
         public const string Description = @"格式化代码注释。";
         public const string Language = "zh-Hans";
-        public const string Version = "1.0.11";
+        public const string Version = "1.0.12";
         public const string Author = "zxs";
         public const string Tags = "";
         public const bool IsPreview = false;
